@@ -37,7 +37,7 @@ architecture bhv of tilemap is
 		tilestart := 8000 + 16*tileposition ;     --start of tile
 		temp3 := to_unsigned(ypos,8);
 		ypos3 := temp3(2 downto 0);
-		return to_unsigned(8000 + tileposition + to_integer(ypos3) *2, 16); 
+		return to_unsigned(8000 + 16*tileposition + to_integer(ypos3) *2, 16); 
 	   
   END tile_nr_addr;
    FUNCTION tile_data (tilenr:unsigned; ypos:integer) RETURN unsigned IS
