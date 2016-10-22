@@ -25,19 +25,19 @@ architecture bhv of tilemap is
 	   variable temp3 : unsigned (7 downto 0);
 	  variable ypos3 : unsigned (2 downto 0); 
 	  variable address : unsigned (15 downto 0);
-	  variable tileposition :integer;
-	  variable tilestart: integer;
+	  variable tileposition :unsigned( 15 downto 0);
+	  variable tilestart: unsigned( 15 downto 0);
   BEGIN
     --return "00000000";
 
-        temp1 := xpos * 1/8;   
-	    temp2 := ypos * 1/8;
-	    position := to_unsigned(ypos *32 + xpos, 16) ; --find position that is pointed
-		tileposition := 9800 + temp2*32 + temp1;  --tile number
-		tilestart := 8000 + 16*tileposition ;     --start of tile
+      temp1 := xpos * 1/8;   
+	   temp2 := ypos * 1/8;
+	   position := to_unsigned(ypos *32 + xpos, 16) ; --find position that is pointed
+		tileposition := x"9800" + temp2*32 + temp1;  --tile number
+		tilestart := x"8000" + 16*tileposition ;     --start of tile
 		temp3 := to_unsigned(ypos,8);
 		ypos3 := temp3(2 downto 0);
-		return to_unsigned(8000 + 16*tileposition + to_integer(ypos3) *2, 16); 
+		return to_unsigned(to_integer(x"8000") + to_integer(16*tileposition) + to_integer(ypos3) *2, 16); 
 	   
   END tile_nr_addr;
    FUNCTION tile_data (tilenr:unsigned; ypos:integer) RETURN unsigned IS
