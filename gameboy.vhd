@@ -14,18 +14,14 @@ entity gameboy is
 		 VGA_SYNC_N : out std_logic;
 		 LEDR : out std_logic_vector(9 downto 0);
 		 KEY : in std_logic_vector(3 downto 0);
-	 
-	 HEX0  : OUT std_logic_vector(6 DOWNTO 0); -- show key pressed on display in Hex dig1 (upper 4 bits) dig0 (lower 4 bits)
-	 HEX1 : OUT std_logic_vector(6 DOWNTO 0); 
-	 HEX2  : OUT std_logic_vector(6 DOWNTO 0); 
-	 HEX3  : OUT std_logic_vector(6 DOWNTO 0); 
-	 HEX4 : OUT std_logic_vector(6 DOWNTO 0); 
-    HEX5  : OUT std_logic_vector(6 DOWNTO 0); 
-	 raspi_ss0   : in  STD_LOGIC;
-	 raspi_ss1   : in  STD_LOGIC;
-    raspi_mosi  : in  STD_LOGIC;
-	 raspi_miso  : out STD_LOGIC;
-    raspi_sck   : in  STD_LOGIC);
+		 HEX0, HEX1,
+		 HEX2, HEX3,
+		 HEX4, HEX5  : OUT std_logic_vector(6 DOWNTO 0);
+		 raspi_ss0   : in  STD_LOGIC;
+	    raspi_ss1   : in  STD_LOGIC;
+       raspi_mosi  : in  STD_LOGIC;
+       raspi_miso  : out STD_LOGIC;
+       raspi_sck   : in  STD_LOGIC);
 end gameboy;
 
 architecture Behavioral of gameboy is
@@ -64,22 +60,6 @@ signal col_mul : integer range 0 to 1000;
 signal dispen  : std_logic;
 
 -- memory modules
-component showspi 
-	PORT 
-	(
-	 dig0  : OUT std_logic_vector(6 DOWNTO 0); 
-	 dig1  : OUT std_logic_vector(6 DOWNTO 0); 
-	 dig2  : OUT std_logic_vector(6 DOWNTO 0); 
-	 dig3 : OUT std_logic_vector(6 DOWNTO 0); 
-	 dig4  : OUT std_logic_vector(6 DOWNTO 0); 
-	 dig5  : OUT std_logic_vector(6 DOWNTO 0); -- show key pressed on display in Hex dig1 (upper 4 bits) dig0 (lower 4 bits)
-	 raspi_ss0   : in  STD_LOGIC;
-	 raspi_ss1   : in  STD_LOGIC;
-    raspi_mosi  : in  STD_LOGIC;
-	 raspi_miso  : out STD_LOGIC;
-    raspi_sck   : in  STD_LOGIC
-	);
-	end component;
 component oam
 	PORT
 	(
@@ -194,6 +174,19 @@ COMPONENT tilemap is
 		 );
 END COMPONENT;
 
+COMPONENT showspi IS
+  PORT (
+    reset       : in std_logic;
+    dig0, dig1,
+	 dig2, dig3,
+    dig4, dig5  : OUT std_logic_vector(6 DOWNTO 0); -- show key pressed on display in Hex dig1 (upper 4 bits) dig0 (lower 4 bits)
+	 raspi_ss0   : in  STD_LOGIC;
+	 raspi_ss1   : in  STD_LOGIC;
+    raspi_mosi  : in  STD_LOGIC;
+	 raspi_miso  : out STD_LOGIC;
+    raspi_sck   : in  STD_LOGIC);
+END COMPONENT;
+
 begin
 VGA_CLK <= clk25;
 VGA_BLANK_N <='1' ;
@@ -254,7 +247,6 @@ showspi_inst : showspi PORT MAP (
 	raspi_miso => raspi_miso,
 	raspi_sck => raspi_sck
 );
-
 
 pll_inst : pll PORT MAP (
   refclk => CLOCK_50,
